@@ -22,7 +22,6 @@ public class ImageData extends RealmObject{
     }
 
     public String type;
-    public int shapes = 0;
-    public RealmList<CreationTime> shapesCreationTime  = new RealmList<>();
+    public RealmList<ShapeData> shapes  = new RealmList<>();
 
 }

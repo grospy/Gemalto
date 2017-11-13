@@ -2,19 +2,22 @@ package com.app4each.autodrawer.controller;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.app4each.autodrawer.model.CreationTime;
 import com.app4each.autodrawer.model.ImageData;
+import com.app4each.autodrawer.model.ShapeData;
 import com.app4each.autodrawer.utils.Consts;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import io.realm.Realm;
+
+import static java.lang.Math.random;
 
 /**
  * Created by Vito on 11/12/2017.
@@ -49,15 +52,13 @@ public class LogicStickyService extends Service implements Consts{
                             @Override
                             public void execute(Realm realm) {
 
-                                imageData.shapes++;
-
-                                if(imageData.shapes >= ImageData.ROWS * ImageData.COLOMNS) {
-                                    imageData.shapes = 0;
-                                    imageData.shapesCreationTime.clear();
+                                if(imageData.shapes.size() > ImageData.ROWS * ImageData.COLOMNS) {
+                                    imageData.shapes.clear();
                                 }
 
-                                CreationTime creationTime = new CreationTime(System.currentTimeMillis());
-                                imageData.shapesCreationTime.add(creationTime);
+                                int color = Color.rgb((int)(random()*255), (int)(random()*255), (int)(random()*255));
+                                ShapeData creationTime = new ShapeData(color, System.currentTimeMillis());
+                                imageData.shapes.add(creationTime);
                             }
                         });
                     }
@@ -83,8 +84,7 @@ public class LogicStickyService extends Service implements Consts{
                         @Override
                         public void execute(Realm realm) {
                             ImageData imageData = realm.where(ImageData.class).equalTo("type", shapeType).findFirst();
-                            imageData.shapes = 0;
-                            imageData.shapesCreationTime.clear();
+                            imageData.shapes.clear();
                         }
                     });
                     break;

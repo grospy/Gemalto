@@ -2,7 +2,6 @@ package com.app4each.autodrawer.view.fragments;
 
 import android.graphics.Bitmap;
 
-import com.app4each.autodrawer.model.ImageData;
 import com.app4each.autodrawer.utils.Consts;
 import com.app4each.autodrawer.view.fragments.base.BaseImageFragment;
 
@@ -14,7 +13,7 @@ public class SquareFragment extends BaseImageFragment implements Consts{
 
     @Override
     public void process(){
-        if(item == null)
+        if(mImageData == null)
             return;
 
         Bitmap result = generateImageWithData();

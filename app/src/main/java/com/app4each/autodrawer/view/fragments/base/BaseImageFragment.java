@@ -15,12 +15,11 @@ import android.widget.ImageView;
 
 import com.app4each.autodrawer.R;
 import com.app4each.autodrawer.model.ImageData;
+import com.app4each.autodrawer.model.ShapeData;
 import com.app4each.autodrawer.utils.Consts;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-
-import static java.lang.Math.random;
 
 /**
  * Created by Vito on 11/12/2017.
@@ -29,7 +28,7 @@ import static java.lang.Math.random;
 public abstract class BaseImageFragment extends Fragment implements Consts,RealmChangeListener {
 
     private Realm mRealm;
-    protected ImageData item;
+    protected ImageData mImageData;
     protected ImageView mImageView;
 
     // Abstract functions
@@ -42,8 +41,8 @@ public abstract class BaseImageFragment extends Fragment implements Consts,Realm
         View view = inflater.inflate(R.layout.fragment, container, false);
         mImageView = (ImageView) view.findViewById(R.id.image);
         mRealm = Realm.getDefaultInstance();
-        item = mRealm.where(ImageData.class).equalTo("type", getType()).findFirst();
-        item.addChangeListener(this);
+        mImageData = mRealm.where(ImageData.class).equalTo("type", getType()).findFirst();
+        mImageData.addChangeListener(this);
 
         process();
         return view;
@@ -80,25 +79,28 @@ public abstract class BaseImageFragment extends Fragment implements Consts,Realm
         //paint.setStrokeWidth(0.5f);
         paint.setAntiAlias(true);
 
-        for(int i = 0; i< item.shapes; i++) {
+        int index = 0;
+        for(ShapeData shape : mImageData.shapes) {
             // Possible Black shape on Black background. 00:20 on the clock. So f**k it.
-            paint.setColor(Color.rgb((int)(random()*255), (int)(random()*255), (int)(random()*255)));
+            paint.setColor(shape.color);
+
             switch (getType()){
                 case TYPE_SQUARE:
-                    Rect rect = new Rect(ImageData.SHAPE_SIZE * (i % 4),
-                            ImageData.SHAPE_SIZE * (i / 4),
-                            ImageData.SHAPE_SIZE + ImageData.SHAPE_SIZE * (i % 4),
-                            ImageData.SHAPE_SIZE + ImageData.SHAPE_SIZE * (i / 4));
+                    Rect rect = new Rect(ImageData.SHAPE_SIZE * (index % 4),
+                            ImageData.SHAPE_SIZE * (index / 4),
+                            ImageData.SHAPE_SIZE + ImageData.SHAPE_SIZE * (index % 4),
+                            ImageData.SHAPE_SIZE + ImageData.SHAPE_SIZE * (index / 4));
                     canvas.drawRect(rect, paint);
                     break;
 
                 case TYPE_CIRCLE:
-                    canvas.drawCircle(ImageData.SHAPE_SIZE/2 + ImageData.SHAPE_SIZE * (i % 4),
-                            ImageData.SHAPE_SIZE/2 + ImageData.SHAPE_SIZE * (i / 4),
+                    canvas.drawCircle(ImageData.SHAPE_SIZE/2 + ImageData.SHAPE_SIZE * (index % 4),
+                            ImageData.SHAPE_SIZE/2 + ImageData.SHAPE_SIZE * (index / 4),
                             ImageData.SHAPE_SIZE/2,
                              paint);
                     break;
             }
+            index++;
         }
         return bitMap;
     }
