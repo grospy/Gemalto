@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,13 +23,16 @@ import com.app4each.autodrawer.controller.SettingsManager;
 import com.app4each.autodrawer.utils.Consts;
 import com.app4each.autodrawer.view.fragments.CircleFragment;
 import com.app4each.autodrawer.view.fragments.SquareFragment;
+import com.multidots.fingerprintauth.FingerPrintAuthCallback;
+import com.multidots.fingerprintauth.FingerPrintAuthHelper;
 
-public class MainActivity extends AppCompatActivity implements Consts{
+public class MainActivity extends AppCompatActivity implements Consts, FingerPrintAuthCallback {
 
 
     private CircleFragment mFragmentA;
     private SquareFragment mFragmentB;
     private String currentShape = TYPE_CIRCLE;
+    private FingerPrintAuthHelper mFingerPrintAuthHelper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements Consts{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, this);
+
         mFragmentA = new CircleFragment();
         mFragmentB = new SquareFragment();
 
@@ -78,6 +84,20 @@ public class MainActivity extends AppCompatActivity implements Consts{
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //start finger print authentication
+        mFingerPrintAuthHelper.startAuth();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFingerPrintAuthHelper.stopAuth();
     }
 
     @Override
@@ -155,5 +175,33 @@ public class MainActivity extends AppCompatActivity implements Consts{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //***********************************
+    // Fingerprint callbacks
+    //***********************************
+    @Override
+    public void onNoFingerPrintHardwareFound() {
+
+    }
+
+    @Override
+    public void onNoFingerPrintRegistered() {
+
+    }
+
+    @Override
+    public void onBelowMarshmallow() {
+
+    }
+
+    @Override
+    public void onAuthSuccess(FingerprintManager.CryptoObject cryptoObject) {
+
+    }
+
+    @Override
+    public void onAuthFailed(int errorCode, String errorMessage) {
+
     }
 }
