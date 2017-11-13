@@ -8,7 +8,10 @@ import io.realm.RealmObject;
  */
 
 public class CreationTime extends RealmObject {
-    Long timestamp;
+    Long time;
 
     public CreationTime(){}
+    public CreationTime(long time){
+        this.time = time;
+    }
 }

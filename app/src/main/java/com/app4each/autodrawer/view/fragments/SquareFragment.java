@@ -3,13 +3,14 @@ package com.app4each.autodrawer.view.fragments;
 import android.graphics.Bitmap;
 
 import com.app4each.autodrawer.model.ImageData;
+import com.app4each.autodrawer.utils.Consts;
 import com.app4each.autodrawer.view.fragments.base.BaseImageFragment;
 
 /**
- * Created by Vito on 11/12/2017.
+ * Created by Vito on 11/12/2017. 
  */
 
-public class SquareFragment extends BaseImageFragment {
+public class SquareFragment extends BaseImageFragment implements Consts{
 
     @Override
     public void process(){
@@ -22,6 +23,6 @@ public class SquareFragment extends BaseImageFragment {
 
     @Override
     public String getType(){
-        return ImageData.SQUARE;
+        return TYPE_SQUARE;
     }
 }

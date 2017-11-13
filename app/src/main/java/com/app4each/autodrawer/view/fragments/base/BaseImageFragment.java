@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.app4each.autodrawer.R;
 import com.app4each.autodrawer.model.ImageData;
+import com.app4each.autodrawer.utils.Consts;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -25,7 +26,7 @@ import static java.lang.Math.random;
  * Created by Vito on 11/12/2017.
  */
 
-public abstract class BaseImageFragment extends Fragment implements RealmChangeListener {
+public abstract class BaseImageFragment extends Fragment implements Consts,RealmChangeListener {
 
     private Realm mRealm;
     protected ImageData item;
@@ -61,7 +62,8 @@ public abstract class BaseImageFragment extends Fragment implements RealmChangeL
     @Override
     public void onChange(Object element) {
         process();
-        getView().invalidate();
+        if(mImageView != null)
+            mImageView.invalidate();
     }
 
     protected Bitmap generateImageWithData(){
@@ -82,7 +84,7 @@ public abstract class BaseImageFragment extends Fragment implements RealmChangeL
             // Possible Black shape on Black background. 00:20 on the clock. So f**k it.
             paint.setColor(Color.rgb((int)(random()*255), (int)(random()*255), (int)(random()*255)));
             switch (getType()){
-                case ImageData.SQUARE:
+                case TYPE_SQUARE:
                     Rect rect = new Rect(ImageData.SHAPE_SIZE * (i % 4),
                             ImageData.SHAPE_SIZE * (i / 4),
                             ImageData.SHAPE_SIZE + ImageData.SHAPE_SIZE * (i % 4),
@@ -90,7 +92,7 @@ public abstract class BaseImageFragment extends Fragment implements RealmChangeL
                     canvas.drawRect(rect, paint);
                     break;
 
-                case ImageData.CIRCLE:
+                case TYPE_CIRCLE:
                     canvas.drawCircle(ImageData.SHAPE_SIZE/2 + ImageData.SHAPE_SIZE * (i % 4),
                             ImageData.SHAPE_SIZE/2 + ImageData.SHAPE_SIZE * (i / 4),
                             ImageData.SHAPE_SIZE/2,

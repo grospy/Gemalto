@@ -10,8 +10,6 @@ public class ImageData extends RealmObject{
     public static final int ROWS = 6;
 
     // Image types
-    public static final String CIRCLE = "A";
-    public static final String SQUARE = "B";
     public static final int SHAPE_SIZE = 50;
 
 
